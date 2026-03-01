@@ -1,236 +1,352 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
-<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>冷月脚本更新日志</title>
-<style>
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-  background: linear-gradient(120deg, #bdc3c7, #2c3e50 100%);
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>冷月脚本更新日志</title>
+  <style>
+    /* reset 与基础暗色 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
 
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  box-sizing: border-box;
-}
+    body {
+      background: #0a0e14;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      position: relative;
+    }
 
-#bti {
-  height: 80px;
-  background: rgba(44, 62, 80, 0.8);
-  text-align: center;
-  line-height: 80px;
-  color: #fff;
-  font-size: 2.2rem;
-  font-weight: bold;
-  letter-spacing: 6px;
-  border-bottom: 2px solid #000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  z-index: 10;
-  position: fixed;
-  top: 0; left: 0; right: 0;
-}
+    /* 背景图片保持原文件名，模糊处理 */
+    .tp {
+      position: fixed;
+      top: 0;
+      left: 0;
+  margin-left:-60%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(1px) brightness(1);
+      z-index: 0;
+      pointer-events: none;
+    }
 
-.bo {
-  margin-top: 100px;
-  padding: 20px 8% 40px 8%;
-  box-sizing: border-box;
-  min-width: 320px;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
+    /* 主容器 */
+    .app {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
 
-.bu {
-  background: rgba(255,255,255, 0.92);
-  margin: 26px 0;
-  padding: 20px 28px 15px 28px;
-  border-radius: 16px;
-  box-shadow: 0 2px 18px rgba(44,62,80,0.1);
-  border-left: 6px solid #56ccf2;
-  transition: transform 0.13s, box-shadow 0.2s;
-}
+    /* 固定头部 — 简洁深色 */
+    #bti {
+      position: sticky;
+      top: 16px;
+      z-index: 20;
+      width: 100%;
+      background: rgba(15, 22, 30, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 28px;
+      border: 1px solid #2a4a4a;
+      margin: 16px 0 12px 0;
+      padding: 14px 20px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
 
-.bu:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 8px 36px rgba(44,62,80,0.18);
-}
+    #bt {
+      font-size: 2rem;
+      font-weight: 550;
+      color: #c6f0e6;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 5px #002020;
+      margin: 0;
+      line-height: 1.2;
+    }
 
-h3 {
-  text-align: left;
-  color: #00a891;
-  font-size: 1.3rem;
-  letter-spacing: 2px;
-  margin-top: 0; margin-bottom: 9px;
-}
+    /* 滚动卡片区域 */
+    .bo {
+      margin-top: 8px;
+      padding-bottom: 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
 
-ul {
-  margin: 0 0 0 0;
-  padding-left: 18px;
-}
+    /* 卡片 — 极简毛玻璃，无多余符号 */
+    .bu {
+      background: rgba(18, 26, 34, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid #2f5e5a;
+      border-radius: 28px;
+      padding: 24px 24px;
+      box-shadow: 0 12px 25px -12px #000000;
+    }
 
-li {
-  padding: 4px 0;
-  font-size: 1rem;
-  color: #333;
-}
+    /* 日期标题 */
+    .bu h3 {
+      font-size: 1.8rem;
+      font-weight: 450;
+      color: #b8e2da;
+      margin-bottom: 20px;
+      padding-left: 4px;
+      border-left: 4px solid #2f9e8f;
+      padding-left: 16px;
+      line-height: 1.2;
+    }
 
-b, span {
-  color: #2c3e50;
-}
-.sz { color: #e74c3c; font-weight: bold;}
-.xf { color: #3498db; font-weight: bold;}
-.jb1 { color: #27ae60; font-weight: bold;}
-.jb2 { color: #8e44ad; font-weight: bold;}
+    /* 列表去除所有自带符号 */
+    .bu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
-s { color:#aaa; opacity:.7; }
+    .bu li {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: #d1e7ec;
+      padding: 4px 0 4px 8px;
+      border-bottom: 1px solid #2b4e4a;
+      word-break: break-word;
+    }
 
-.tp, .tpgif {
-  position: fixed;
-  left: 0; top: 0;
-  width: 100vw; height: 100vh;
-  object-fit: cover;
-  z-index: -2;
-  filter: blur(6px) grayscale(25%);
-  opacity: 0.12;
-  pointer-events: none;
-}
+    .bu li:last-child {
+      border-bottom: none;
+    }
 
-.tpgif {
-  filter: blur(3px) grayscale(13%);
-  opacity: 0.16;
-}
+    /* 文字着色 — 只保留原本的类名含义，不加额外符号 */
+    .jb1 {
+      color: #b3a2ff;  /* 淡紫，原为红色警告，现柔和化 */
+    }
 
-@media (max-width: 600px) {
-  #bti { font-size: 1.1rem; height: 54px; line-height: 54px; }
-  .bo { padding: 6px 2% 10vw 2%; }
-  .bu { padding: 13px 7px 11px 16px; border-radius: 8px;}
-  h3 { font-size: 1rem;}
-}
-</style>
+    .jb2 {
+      color: #9ad4c0;  /* 淡绿松 */
+    }
+
+    .sz {
+      color: #ffae70;  /* 暖橙 — 用于更新重点 */
+      font-weight: 550;
+      background: rgba(255, 160, 70, 0.3);
+      padding: 2px 6px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    .xf {
+      color: #7ad0b5;  /* 水绿 — 修复/优化 */
+      background: rgba(80, 190, 160, 0.3);
+      padding: 2px 6px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+
+    /* 普通加粗保留白色 */
+    b {
+      color: #ffffff;
+      font-weight: 550;
+    }
+
+    span {
+      color: inherit;
+    }
+
+    /* 删除线条目不变 */
+    s {
+      text-decoration-color: #6a8a88;
+    }
+
+    /* 底部版本水印 — 极简，不加符号 */
+
+     span {
+      color: #8de4cf;
+      font-weight: 550;
+      margin-left: 4px;
+    }
+
+    /* 完全隐藏所有可能生成符号的伪元素 */
+    .bu li::before,
+    .bu li::after {
+      display: none;
+      content: none;
+    }
+
+    /* 适配小屏 */
+    @media (max-width: 480px) {
+      #bt {
+        font-size: 1.7rem;
+      }
+      .bu h3 {
+        font-size: 1.6rem;
+      }
+      .bu li {
+        font-size: 1rem;
+      }
+      .bu {
+        padding: 20px 18px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<img src="08.jpg" alt="默认背景图片" class="tp" />
-<img class="tpgif" src="08.gif" alt="动图背景"/>
+<img class="tp" src="08.jpg" alt="默认背景图片" alt="background" />
 
-<div id="bti">
-  冷月脚本更新日志
-</div>
-
-<div class="bo">
-
-  <div class="bu">
-    <h3>26-02-26</h3>
-    <ul>
-      <li>添加脚本使用统计</li>
-      <li>添加冷月文本修改脚本</li>
-    </ul>
+<div class="app">
+  <div id="bti">
+    <h1 id="bt">冷月脚本更新日志</h1>
   </div>
 
-  <div class="bu">
-    <h3>26-02-22</h3>
-    <ul>
-      <li>优化脚本</li>
-    </ul>
-  </div>
-  <div class="bu">
-    <h3>26-02-10</h3>
-    <ul>
-      <li><b class="sz">更新</b> 冷月兵种伤害血量价格体型技能标签模型自定义修改脚本16</li>
-      <li>更新兵种技能属性修改</li>
-      <li>删除技能自定义保存管理</li>
-    </ul>
-  </div>
-  <div class="bu">
-    <h3>26-01-24</h3>
-    <ul>
-      <li><b class="sz">更新</b>冷月贴图重制版(3)3脚本</li>
-      <li>更新更多兵种贴图修改</li>
-      <li>添加法师/黄金矛士沙盒模式贴图修改</li>
-    </ul>
-  </div>
-  <div class="bu">
-    <h3>26-01-23</h3>
-    <ul>
-      <li><b class="sz">更新</b>冷月兵种伤害血量价格体型技能标签模型自定义修改脚本<b>15.2</b></li>
-      <li>更新2397版本开发者模式修改</li>
-      <li>优化伤害血量修改选项</li>
-    </ul>
-  </div>
-  <div class="bu">
-    <h3>26-01-11</h3>
-    <ul>
-      <li><b class="sz">更新</b>冷月兵种伤害血量价格体型技能标签模型自定义修改脚本15</li>
-      <li>更新兵种模型修改脚本</li>
-      <li>添加设置价格/模型步骤一修改</li>
-      <li>添加新/旧版本兵种模型修改</li>
-      <li>添加普通兵种/隐藏首领模型修改</li>
-      <li class="jb1"><b class="xf">更新</b> <span>冷月贴图重制版(3)2.1</span></li>
-      <li class="jb1"><span>添加沙盒模式贴图修改脚本</span></li>
-      <li class="jb1"><span>添加矛士沙盒模式贴图修改</span></li>
-    </ul>
-  </div>
-  <div class="bu">
-    <h3>26-01-04</h3>
-    <ul>
-      <li><b class="xf">更新</b>冷月兵种伤害血量价格体型技能标签自定义修改脚本14</li>
-      <li>更新兵种标签修改脚本</li>
-      <li>添加兵种多标签\单标签修改</li>
-    </ul>
-  </div>
-  <div class="bu">
-    <h3>25-12-25</h3>
-    <ul>
-      <li><b class="xf">更新</b>冷月兵种伤害血量价格体型技能自定义修改脚本13</li>
-      <li>更新2288版本修改开发者模式</li>
-      <li>添加盲巨领主/凯骑士体型修改</li>
-      <li>将主脚本的"价格修改"功能分离为"价格修改脚本"</li>
-      <li>更新隐藏首领/兵种价格修改</li>
-      <li>添加"价格步骤一"(必开)功能</li>
-    </ul>
-  </div>
-  <div class="bu">
-    <h3>25-12-11</h3>
-    <ul>
-      <li><b class="xf">修复</b>冷月通用版本隐藏兵种修改脚本5.1</li>
-      <li>修复隐藏卡牌一键开启(默认)/(新版本)修改失败</li>
-    </ul>
-  </div>
-  <div class="bu">
-    <h3>25-12-10</h3>
-    <ul>
-      <li>添加水印“冷月修改器”</li>
-      <li class="jb1"><b>更新</b> <span>冷月通用版本隐藏兵种修改脚本5</span></li>
-      <li class="jb1"><span>添加所有隐藏卡牌一键开启(新版本)</span></li>
-      <li class="jb1"><span>添加隐藏法术修改</span></li>
-      <li class="jb1"><span>添加隐藏卡牌修改</span></li>
-    </ul>
-  </div>
-  <div class="bu">
-    <h3>25-12-03</h3>
-    <ul>
-      <li><b>更新</b>冷月兵种伤害血量价格体型技能自定义修改脚本<b class="sz">12.1</b></li>
-      <li><b class="xf">修复</b>剑士/忍者技能修改失败bug</li>
-    </ul>
-  </div>
-  <div class="bu">
-    <h3>25-11-25</h3>
-    <ul>
-      <s><li><b>删除</b>脚本雕像颜色修改脚本</li></s>
-      <li class="jb1"><b>更新</b> <span>冷月兵种伤害血量价格体型技能自定义修改脚本<b class="sz">12</b></span></li>
-      <li class="jb1"><span>添加兵种技能冷却修改脚本</span></li>
-      <li class="jb1"><span>添加所有普通兵种技能冷却自定义修改功能</span></li>
-      <li class="jb1"><span>添加所有普通兵种技能修改功能</span></li>
-      <li class="jb2"><b>更新</b> <span>添加冷月兵种修改脚本</span></li>
-      <li class="jb2"><span>添加僵尸修改跳跳僵尸功能</span></li>
-    </ul>
-  </div>
-</div>
+  <div class="bo">
+
+    <!-- 26-02-26 -->
+    <div class="bu">
+      <h3>26-02-26</h3>
+      <ul>
+        <li><span class="xf">添加</span> 脚本使用统计</li>
+        <li><span class="xf">添加</span> 冷月文本修改脚本</li>
+      </ul>
+    </div>
+
+    <!-- 26-02-22 -->
+    <div class="bu">
+      <h3>26-02-22</h3>
+      <ul>
+        <li><span class="xf">优化</span> 脚本</li>
+      </ul>
+    </div>
+
+    <!-- 26-02-10 -->
+    <div class="bu">
+      <h3>26-02-10</h3>
+      <ul>
+        <li><b class="sz">更新</b> 冷月兵种伤害血量价格体型技能标签模型自定义修改脚本16</li>
+        <li>更新兵种技能属性修改</li>
+        <li>删除技能自定义保存管理</li>
+      </ul>
+    </div>
+
+    <!-- 26-01-24 -->
+    <div class="bu">
+      <h3>26-01-24</h3>
+      <ul>
+        <li><b class="sz">更新</b> 冷月贴图重制版(3)3脚本</li>
+        <li>更新更多兵种贴图修改</li>
+        <li>添加法师/黄金矛士沙盒模式贴图修改</li>
+      </ul>
+    </div>
+
+    <!-- 26-01-23 -->
+    <div class="bu">
+      <h3>26-01-23</h3>
+      <ul>
+        <li><b class="sz">更新</b> 冷月兵种伤害血量价格体型技能标签模型自定义修改脚本 <b>15.2</b></li>
+        <li>更新2397版本开发者模式修改</li>
+        <li>优化伤害血量修改选项</li>
+      </ul>
+    </div>
+
+    <!-- 26-01-11 -->
+    <div class="bu">
+      <h3>26-01-11</h3>
+      <ul>
+        <li><b class="sz">更新</b> 冷月兵种伤害血量价格体型技能标签模型自定义修改脚本15</li>
+        <li>更新兵种模型修改脚本</li>
+        <li>添加设置价格/模型步骤一修改</li>
+        <li>添加新/旧版本兵种模型修改</li>
+        <li>添加普通兵种/隐藏首领模型修改</li>
+        <li class="jb1"><span class="xf">更新</span> 冷月贴图重制版(3)2.1</li>
+        <li class="jb1">添加沙盒模式贴图修改脚本</li>
+        <li class="jb1">添加矛士沙盒模式贴图修改</li>
+      </ul>
+    </div>
+
+    <!-- 26-01-04 -->
+    <div class="bu">
+      <h3>26-01-04</h3>
+      <ul>
+        <li><span class="xf">更新</span> 冷月兵种伤害血量价格体型技能标签自定义修改脚本14</li>
+        <li>更新兵种标签修改脚本</li>
+        <li>添加兵种多标签\单标签修改</li>
+      </ul>
+    </div>
+
+    <!-- 25-12-25 -->
+    <div class="bu">
+      <h3>25-12-25</h3>
+      <ul>
+        <li><span class="xf">更新</span> 冷月兵种伤害血量价格体型技能自定义修改脚本13</li>
+        <li>更新2288版本修改开发者模式</li>
+        <li>添加盲巨领主/凯骑士体型修改</li>
+        <li>将主脚本的价格修改功能分离为价格修改脚本</li>
+        <li>更新隐藏首领/兵种价格修改</li>
+        <li>添加价格步骤一(必开)功能</li>
+      </ul>
+    </div>
+
+    <!-- 25-12-11 -->
+    <div class="bu">
+      <h3>25-12-11</h3>
+      <ul>
+        <li><span class="xf">修复</span> 冷月通用版本隐藏兵种修改脚本5.1</li>
+        <li>修复隐藏卡牌一键开启(默认)/(新版本)修改失败</li>
+      </ul>
+    </div>
+
+    <!-- 25-12-10 -->
+    <div class="bu">
+      <h3>25-12-10</h3>
+      <ul>
+        <li>添加水印“冷月修改器”</li>
+        <li class="jb1"><b>更新</b> 冷月通用版本隐藏兵种修改脚本5</li>
+        <li class="jb1">添加所有隐藏卡牌一键开启(新版本)</li>
+        <li class="jb1">添加隐藏法术修改</li>
+        <li class="jb1">添加隐藏卡牌修改</li>
+      </ul>
+    </div>
+
+    <!-- 25-12-03 -->
+    <div class="bu">
+      <h3>25-12-03</h3>
+      <ul>
+        <li><b>更新</b> 冷月兵种伤害血量价格体型技能自定义修改脚本 <b class="sz">12.1</b></li>
+        <li><span class="xf">修复</span> 剑士/忍者技能修改失败bug</li>
+      </ul>
+    </div>
+
+    <!-- 25-11-25 -->
+    <div class="bu">
+      <h3>25-11-25</h3>
+      <ul>
+        <s><li>删除 脚本雕像颜色修改脚本</li></s>
+        <li class="jb1"><b>更新</b> 冷月兵种伤害血量价格体型技能自定义修改脚本 <b class="sz">12</b></li>
+        <li class="jb1">添加兵种技能冷却修改脚本</li>
+        <li class="jb1">添加所有普通兵种技能冷却自定义修改功能</li>
+        <li class="jb1">添加所有普通兵种技能修改功能</li>
+        <li class="jb2"><b>更新</b> 添加冷月兵种修改脚本</li>
+        <li class="jb2">添加僵尸修改跳跳僵尸功能</li>
+      </ul>
+    </div>
+
+
+
+  </div> <!-- end .bo -->
+</div> <!-- end .app -->
+
+
 
 </body>
 </html>
