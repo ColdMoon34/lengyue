@@ -1,373 +1,478 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>冷月脚本更新日志</title>
-  <meta>冷月修改器更新日志</meta>
-  <style>
-    /* reset 与基础暗色 */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>AI机器人</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background: #0a0e14;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 0;
-      position: relative;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #EDEDED;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
 
-    /* 背景图片保持原文件名，模糊处理 */
-    .tp {
-      position: fixed;
-      top: 0;
-      left: 0;
-  margin-left:-60%;
-      height: 100%;
-      object-fit: cover;
-      filter: blur(1px);
-      z-index: 0;
-      pointer-events: none;
-      
-    }
+        /* 聊天容器 */
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            background-color: #EDEDED;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
 
-    /* 主容器 */
-    .app {
-      position: relative;
-      z-index: 5;
-      width: 100%;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
+        /* 标题栏 */
+        .chat-header {
+            background-color: #FFFFFF;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid #E0E0E0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
 
-    /* 固定头部 — 简洁深色 */
-    #bti {
-      position: sticky;
-      top: 16px;
-      z-index: 20;
-      width: 100%;
-      background: rgba(15, 22, 30, 0.5);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 28px;
-      border: 1px solid #2a4a4a;
-      margin: 16px 0 12px 0;
-      padding: 14px 20px;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-    }
+        .chat-header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333333;
+        }
 
-    #bt {
-      font-size: 2rem;
-      font-weight: 550;
-      color: #c6f0e6;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 5px #002020;
-      margin: 0;
-      line-height: 1.2;
-    }
+        .chat-header .back-btn {
+            position: absolute;
+            left: 16px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
 
-    /* 滚动卡片区域 */
-    .bo {
-      margin-top: 8px;
-      padding-bottom: 50px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
+        /* 消息区域 */
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-    /* 卡片 — 极简毛玻璃，无多余符号 */
-    .bu {
-      background: rgba(18, 26, 34, 0.2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid #2f5e5a;
-      border-radius: 28px;
-      padding: 24px 24px;
-      box-shadow: 0 12px 25px -12px #000000;
-    }
+        /* 消息通用样式 */
+        .message {
+            display: flex;
+            width: 100%;
+            animation: fadeIn 0.3s ease;
+        }
 
-    /* 日期标题 */
-    .bu h3 {
-      font-size: 1.8rem;
-      font-weight: 450;
-      color: #b8e2da;
-      margin-bottom: 20px;
-      padding-left: 4px;
-      border-left: 4px solid #2f9e8f;
-      padding-left: 16px;
-      line-height: 1.2;
-    }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    /* 列表去除所有自带符号 */
-    .bu ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+        .message-left {
+            justify-content: flex-start;
+        }
 
-    .bu li {
-      font-size: 1.05rem;
-      line-height: 1.5;
-      color: #d1e7ec;
-      padding: 4px 0 4px 8px;
-      border-bottom: 1px solid #2b4e4a;
-      word-break: break-word;
-    }
+        .message-right {
+            justify-content: flex-end;
+        }
 
-    .bu li:last-child {
-      border-bottom: none;
-    }
+        /* 消息气泡容器 */
+        .message-bubble-wrapper {
+            max-width: 70%;
+            display: flex;
+            flex-direction: column;
+        }
 
-    /* 文字着色 — 只保留原本的类名含义，不加额外符号 */
-    .jb1 {
-      color: #b3a2ff;  /* 淡紫，原为红色警告，现柔和化 */
-    }
+        .message-left .message-bubble-wrapper {
+            align-items: flex-start;
+        }
 
-    .jb2 {
-      color: #9ad4c0;  /* 淡绿松 */
-    }
+        .message-right .message-bubble-wrapper {
+            align-items: flex-end;
+        }
 
-    .sz {
-      color: #ffae70;  /* 暖橙 — 用于更新重点 */
-      font-weight: 550;
-      background: rgba(255, 160, 70, 0.3);
-      padding: 2px 6px;
-      border-radius: 12px;
-      display: inline-block;
-    }
+        /* 消息气泡 */
+        .message-bubble {
+            padding: 10px 12px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            word-break: break-word;
+            position: relative;
+        }
 
-    .xf {
-      color: #7ad0b5;  /* 水绿 — 修复/优化 */
-      background: rgba(80, 190, 160, 0.3);
-      padding: 2px 6px;
-      border-radius: 12px;
-      font-weight: 500;
-    }
+        .message-left .message-bubble {
+            background-color: #FFFFFF;
+            color: #333333;
+            border-top-left-radius: 4px;
+        }
 
-    /* 普通加粗保留白色 */
-    b {
-      color: #ffffff;
-      font-weight: 550;
-    }
+        .message-right .message-bubble {
+            background-color: #95EC69;
+            color: #000000;
+            border-top-right-radius: 4px;
+        }
 
-    span {
-      color: inherit;
-    }
+        /* 时间戳 */
+        .message-time {
+            font-size: 10px;
+            color: #999999;
+            margin-top: 4px;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
 
-    /* 删除线条目不变 */
-    s {
-      text-decoration-color: #6a8a88;
-    }
+        .message-left .message-time {
+            text-align: left;
+        }
 
-    /* 底部版本水印 — 极简，不加符号 */
+        .message-right .message-time {
+            text-align: right;
+        }
 
-     span {
-      color: #8de4cf;
-      font-weight: 550;
-      margin-left: 4px;
-    }
+        /* 输入区域 */
+        .input-area {
+            background-color: #FFFFFF;
+            border-top: 1px solid #E0E0E0;
+            padding: 8px 12px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
 
-    /* 完全隐藏所有可能生成符号的伪元素 */
-    .bu li::before,
-    .bu li::after {
-      display: none;
-      content: none;
-    }
+        .input-area input {
+            flex: 1;
+            border: none;
+            background-color: #F5F5F5;
+            padding: 10px 14px;
+            border-radius: 20px;
+            font-size: 15px;
+            outline: none;
+            font-family: inherit;
+        }
 
-    /* 适配小屏 */
-    @media (max-width: 480px) {
-      #bt {
-        font-size: 1.7rem;
-      }
-      .bu h3 {
-        font-size: 1.6rem;
-      }
-      .bu li {
-        font-size: 1rem;
-      }
-      .bu {
-        padding: 20px 18px;
-      }
-    }
-  </style>
+        .input-area input:focus {
+            background-color: #EFEFEF;
+        }
+
+        .input-area button {
+            background-color: #07C160;
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .input-area button:hover {
+            background-color: #06AD56;
+        }
+
+        .input-area button:active {
+            transform: scale(0.96);
+        }
+
+        /* 正在输入动画 */
+        .typing-indicator {
+            background-color: #FFFFFF;
+            padding: 10px 16px;
+            border-radius: 18px;
+            border-top-left-radius: 4px;
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-6px);
+                opacity: 1;
+            }
+        }
+
+        /* 滚动条样式 */
+        .messages-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .messages-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 2px;
+        }
+    </style>
 </head>
 <body>
+    <div class="chat-container">
+        <!-- 标题栏 -->
+        <div class="chat-header">
+            <span class="back-btn" onclick="history.back()">←</span>
+            <h1>AI机器人</h1>
+        </div>
 
-<img class="tp" src="08.jpg" alt="默认背景图片" alt="background" />
+        <!-- 消息区域 -->
+        <div class="messages-area" id="messagesArea">
+            <div class="message message-left">
+                <div class="message-bubble-wrapper">
+                    <div class="message-bubble">
+                        你好！我是智能AI机器人，有什么可以帮你的吗？
+                    </div>
+                    <div class="message-time" id="welcomeTime"></div>
+                </div>
+            </div>
+        </div>
 
-<div class="app">
-  <div id="bti">
-    <h1 id="bt">冷月脚本更新日志</h1>
-  </div>
-
-  <div class="bo">
-  
-  
-     <div class="bu">
-      <h3>26-03-24</h3>
-      <ul>
-        <li><span class="sz">更新</span> 冷月兵种伤害血量价格体型技能标签模型自定义修改脚本<b class="sz">18</b></li>
-        <li><span class="sz">更新</span> 兵种模型修改脚本</li>
-        <li>修复伤害修改已知bug</li>
-      </ul>
+        <!-- 输入区域 -->
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="输入消息..." autocomplete="off">
+            <button id="sendBtn">发送</button>
+        </div>
     </div>
 
-  
-      <div class="bu">
-      <h3>26-03-12</h3>
-      <ul>
-        <li><span class="sz">更新</span> 冷月兵种伤害血量价格体型技能标签模型自定义修改脚本<b class="sz">17</b></li>
-        <li><span class="sz">更新</span> 兵种伤害属性修改</li>
-      </ul>
-    </div>
- 
-    <!-- 26-02-26 -->
-    <div class="bu">
-      <h3>26-02-26</h3>
-      <ul>
-        <li><span class="xf">添加</span> 脚本使用统计</li>
-        <li><span class="xf">添加</span> 冷月文本修改脚本</li>
-      </ul>
-    </div>
+    <script>
+          // ========== 智谱AI配置 ==========
+        // 在这里填写你的智谱API Key
+        const API_KEY = "1666996ec2434b499daeee4bbd7405e7.fb9FLM8UVZUoNQ73";
+        const ZHIPU_API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+        // =================================
+        let messages = [];
+        const messagesArea = document.getElementById('messagesArea');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        
+        // 聊天历史记录（用于上下文）
+        let conversationHistory = [
+            { role: "system", content: "你是一个乐于助人的AI助手，请用中文回答。" }
+        ];
 
-    <!-- 26-02-22 -->
-    <div class="bu">
-      <h3>26-02-22</h3>
-      <ul>
-        <li><span class="xf">优化</span> 脚本</li>
-      </ul>
-    </div>
+        // 添加初始消息时间
+        document.getElementById('welcomeTime').textContent = getCurrentTime();
 
-    <!-- 26-02-10 -->
-    <div class="bu">
-      <h3>26-02-10</h3>
-      <ul>
-        <li><b class="sz">更新</b> 冷月兵种伤害血量价格体型技能标签模型自定义修改脚本16</li>
-        <li>更新兵种技能属性修改</li>
-        <li>删除技能自定义保存管理</li>
-      </ul>
-    </div>
+        // 获取当前时间
+        function getCurrentTime() {
+            const now = new Date();
+            return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
 
-    <!-- 26-01-24 -->
-    <div class="bu">
-      <h3>26-01-24</h3>
-      <ul>
-        <li><b class="sz">更新</b> 冷月贴图重制版(3)3脚本</li>
-        <li>更新更多兵种贴图修改</li>
-        <li>添加法师/黄金矛士沙盒模式贴图修改</li>
-      </ul>
-    </div>
+        // 添加消息到界面
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'message-right' : 'message-left'}`;
+            
+            const wrapper = document.createElement('div');
+            wrapper.className = 'message-bubble-wrapper';
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.innerHTML = text.replace(/\n/g, '<br>');
+            
+            const timeSpan = document.createElement('div');
+            timeSpan.className = 'message-time';
+            timeSpan.textContent = getCurrentTime();
+            
+            wrapper.appendChild(bubble);
+            wrapper.appendChild(timeSpan);
+            messageDiv.appendChild(wrapper);
+            
+            messagesArea.appendChild(messageDiv);
+            scrollToBottom();
+            
+            return messageDiv;
+        }
 
-    <!-- 26-01-23 -->
-    <div class="bu">
-      <h3>26-01-23</h3>
-      <ul>
-        <li><b class="sz">更新</b> 冷月兵种伤害血量价格体型技能标签模型自定义修改脚本 <b>15.2</b></li>
-        <li>更新2397版本开发者模式修改</li>
-        <li>优化伤害血量修改选项</li>
-      </ul>
-    </div>
+        // 滚动到底部
+        function scrollToBottom() {
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
 
-    <!-- 26-01-11 -->
-    <div class="bu">
-      <h3>26-01-11</h3>
-      <ul>
-        <li><b class="sz">更新</b> 冷月兵种伤害血量价格体型技能标签模型自定义修改脚本15</li>
-        <li>更新兵种模型修改脚本</li>
-        <li>添加设置价格/模型步骤一修改</li>
-        <li>添加新/旧版本兵种模型修改</li>
-        <li>添加普通兵种/隐藏首领模型修改</li>
-        <li class="jb1"><span class="xf">更新</span> 冷月贴图重制版(3)2.1</li>
-        <li class="jb1">添加沙盒模式贴图修改脚本</li>
-        <li class="jb1">添加矛士沙盒模式贴图修改</li>
-      </ul>
-    </div>
+        // 添加正在输入提示
+        function addTypingIndicator() {
+            removeTypingIndicator();
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message message-left typing-message';
+            
+            const wrapper = document.createElement('div');
+            wrapper.className = 'message-bubble-wrapper';
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                typingIndicator.appendChild(dot);
+            }
+            
+            bubble.appendChild(typingIndicator);
+            wrapper.appendChild(bubble);
+            typingDiv.appendChild(wrapper);
+            
+            messagesArea.appendChild(typingDiv);
+            scrollToBottom();
+            
+            return typingDiv;
+        }
+        
+        // 移除正在输入提示
+        function removeTypingIndicator() {
+            const typingMsg = document.querySelector('.typing-message');
+            if (typingMsg) {
+                typingMsg.remove();
+            }
+        }
 
-    <!-- 26-01-04 -->
-    <div class="bu">
-      <h3>26-01-04</h3>
-      <ul>
-        <li><span class="xf">更新</span> 冷月兵种伤害血量价格体型技能标签自定义修改脚本14</li>
-        <li>更新兵种标签修改脚本</li>
-        <li>添加兵种多标签\单标签修改</li>
-      </ul>
-    </div>
+        // 发送消息
+        async function sendMessage() {
+            const inputText = messageInput.value.trim();
+            if (inputText === '') {
+                return;
+            }
+            
+            
+            
+            // 添加用户消息
+            addMessage(inputText, true);
+            
+            // 记录到历史
+            conversationHistory.push({ role: "user", content: inputText });
+            
+            // 清空输入框
+            messageInput.value = '';
+            
+            // 显示正在输入
+            const typingIndicator = addTypingIndicator();
+            
+            try {
+                // 调用智谱API
+                const response = await fetch(ZHIPU_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'glm-4-flash',
+                        messages: conversationHistory,
+                        stream: false,
+                        temperature: 0.7,
+                        max_tokens: 2048
+                    })
+                });
+                
+                // 移除正在输入提示
+                typingIndicator.remove();
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    let errorMsg = `API错误 (${response.status})`;
+                    if (errorData.error?.message) {
+                        errorMsg += `: ${errorData.error.message}`;
+                    } else if (errorData.msg) {
+                        errorMsg += `: ${errorData.msg}`;
+                    }
+                    throw new Error(errorMsg);
+                }
+                
+                const data = await response.json();
+                const aiReply = data.choices[0].message.content;
+                
+                // 记录到历史
+                conversationHistory.push({ role: "assistant", content: aiReply });
+                
+                // 添加AI回复
+                addMessage(aiReply, false);
+                
+                // 限制历史长度，避免token过多
+                if (conversationHistory.length > 22) {
+                    conversationHistory = [
+                        conversationHistory[0],
+                        ...conversationHistory.slice(-20)
+                    ];
+                }
+                
+            } catch (error) {
+                console.error('请求失败:', error);
+                typingIndicator.remove();
+                
+                let errorMsg = error.message;
+                if (error.message.includes('Failed to fetch')) {
+                    errorMsg = '网络连接失败，请检查网络后重试';
+                } else if (error.message.includes('401')) {
+                    errorMsg = 'API Key无效，请检查是否正确';
+                } else if (error.message.includes('429')) {
+                    errorMsg = '请求过于频繁，请稍后再试';
+                }
+                addMessage(`抱歉，出错了：${errorMsg}`, false);
+            }
+        }
 
-    <!-- 25-12-25 -->
-    <div class="bu">
-      <h3>25-12-25</h3>
-      <ul>
-        <li><span class="xf">更新</span> 冷月兵种伤害血量价格体型技能自定义修改脚本13</li>
-        <li>更新2288版本修改开发者模式</li>
-        <li>添加盲巨领主/凯骑士体型修改</li>
-        <li>将主脚本的价格修改功能分离为价格修改脚本</li>
-        <li>更新隐藏首领/兵种价格修改</li>
-        <li>添加价格步骤一(必开)功能</li>
-      </ul>
-    </div>
-
-    <!-- 25-12-11 -->
-    <div class="bu">
-      <h3>25-12-11</h3>
-      <ul>
-        <li><span class="xf">修复</span> 冷月通用版本隐藏兵种修改脚本5.1</li>
-        <li>修复隐藏卡牌一键开启(默认)/(新版本)修改失败</li>
-      </ul>
-    </div>
-
-    <!-- 25-12-10 -->
-    <div class="bu">
-      <h3>25-12-10</h3>
-      <ul>
-        <li>添加水印“冷月修改器”</li>
-        <li class="jb1"><b>更新</b> 冷月通用版本隐藏兵种修改脚本5</li>
-        <li class="jb1">添加所有隐藏卡牌一键开启(新版本)</li>
-        <li class="jb1">添加隐藏法术修改</li>
-        <li class="jb1">添加隐藏卡牌修改</li>
-      </ul>
-    </div>
-
-    <!-- 25-12-03 -->
-    <div class="bu">
-      <h3>25-12-03</h3>
-      <ul>
-        <li><b>更新</b> 冷月兵种伤害血量价格体型技能自定义修改脚本 <b class="sz">12.1</b></li>
-        <li><span class="xf">修复</span> 剑士/忍者技能修改失败bug</li>
-      </ul>
-    </div>
-
-    <!-- 25-11-25 -->
-    <div class="bu">
-      <h3>25-11-25</h3>
-      <ul>
-        <s><li>删除 脚本雕像颜色修改脚本</li></s>
-        <li class="jb1"><b>更新</b> 冷月兵种伤害血量价格体型技能自定义修改脚本 <b class="sz">12</b></li>
-        <li class="jb1">添加兵种技能冷却修改脚本</li>
-        <li class="jb1">添加所有普通兵种技能冷却自定义修改功能</li>
-        <li class="jb1">添加所有普通兵种技能修改功能</li>
-        <li class="jb2"><b>更新</b> 添加冷月兵种修改脚本</li>
-        <li class="jb2">添加僵尸修改跳跳僵尸功能</li>
-      </ul>
-    </div>
-
-
-
-  </div> <!-- end .bo -->
-</div> <!-- end .app -->
-
-
-
+        // 监听发送按钮
+        sendBtn.addEventListener('click', sendMessage);
+        
+        // 监听回车键
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // 自动调整输入框焦点
+        messageInput.focus();
+        
+        console.log('聊天机器人已启动！');
+    </script>
 </body>
 </html>
