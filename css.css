@@ -90,7 +90,7 @@ body {
   aspect-ratio: 1/1;
   border-radius: 20px;
   border: 0.1px solid #353434;
-  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+  background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.3));
   box-shadow: 10px 10px 25px 2px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(3px);
 }
@@ -101,7 +101,7 @@ body {
   margin-right: -50px;
   border-radius: 20px;
   border: 0.1px solid #353434;
-  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+  background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.2));
   box-shadow: 10px 10px 25px 2px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(3px);
 rotate: -20deg;
@@ -125,8 +125,10 @@ rotate: 20deg;
 #bb {
   display: flex;
   width: 90%;
-  margin-left: 100%;
+
 }
+
+
 
 .b {
   height: 50%;
@@ -146,6 +148,6 @@ rotate: 20deg;
 
 .s {
   height: 100%;
-  padding-left: -200%;
+
   position: relative;
 }
