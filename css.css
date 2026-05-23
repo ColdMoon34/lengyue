@@ -72,7 +72,7 @@ html, body{
 html,
 body {
   height: 100%;
-
+  background: #3a3a3a;
 }
 
 /*
@@ -86,14 +86,46 @@ body {
 }
 
 #b {
-  width: 50%;
-  position: relative;
+  width: 60%;
   aspect-ratio: 1/1;
   border-radius: 20px;
-  border: 0.1px solid #000;
+  border: 0.1px solid #353434;
   background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
   box-shadow: 10px 10px 25px 2px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(3px);
+}
+
+#e {
+  width: 60%;
+  aspect-ratio: 1/1;
+  margin-right: -50px;
+  border-radius: 20px;
+  border: 0.1px solid #353434;
+  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 10px 10px 25px 2px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(3px);
+rotate: -20deg;
+  
+}
+/*
+右
+*/
+#f {
+  width: 60%;
+  aspect-ratio: 1/1;
+  margin-left: -50px;
+  border-radius: 20px;
+  border: 0.1px solid #353434;
+  background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+  box-shadow: 10px 10px 25px 2px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(3px);
+rotate: 20deg;
+}
+
+#bb {
+  display: flex;
+  width: 90%;
+  margin-left: 100%;
 }
 
 .b {
@@ -103,10 +135,17 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-opacity: 0.1;
+  opacity: 0.1;
 }
 
 .d {
   height: 100%;
+  width: 200%;
+  position: relative;
+}
+
+.s {
+  height: 100%;
+  padding-left: -200%;
   position: relative;
 }
