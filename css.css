@@ -82,7 +82,7 @@ body {
   height: 100%;
   object-fit: cover;
   position: fixed;
-  filter: brightness(0.3);
+  filter: brightness(0.5);
 }
 
 #b {
@@ -142,7 +142,7 @@ rotate: 20deg;
 
 .d {
   height: 100%;
-  width: 200%;
+  width: 100%;
   position: relative;
 }
 
