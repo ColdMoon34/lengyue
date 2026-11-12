@@ -23,7 +23,7 @@ gg.command(" rm -rf /storage/emulated/0/Android/odd/ ")
 assets.lua("͇")
 --]]
 --]]
-gg.toast("启动中")
+gg.toast("正在启动中")
 if gg.isVPN() then
     gg.alert('请关闭网络代理!\n如VPN，加速器等\n如有需要请脚本开启后再开启加速器...')
     os.exit()
